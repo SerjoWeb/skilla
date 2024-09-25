@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: local("SFProDisplay-Regular"),
+    url("./assets/fonts/SFProDisplay-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+html, body, #root, main {
+  height: 100%;
+  width: 100%;
+}
+
+* {
+  font-family: "SF Pro Display", sans-serif;
+  font-size: 15px;
+}
+
+.ag-theme-quartz {
+  --ag-borders: none;
+  --ag-foreground-color: #5E7793;
+  --ag-background-color: white;
+  --ag-header-background-color: white;
+  --ag-row-hover-color: rgba(212, 223, 243, 0.17);
+}
+
+.ag-header-cell-text {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.custom-input {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  color: #ADBFDF;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+.custom-input:hover {
+  color: #1F46FB;
+}
