@@ -6,10 +6,13 @@ import { recordsStore } from "@/store/recordsStore/recordsStore";
 import { renderTime } from "@/helpers/date/renderTime";
 import type { ICall } from "@/api/calls/interfaces";
 
+import AudioPlayer from "@/components/ui/audioPlayer/AudioPlayer";
+
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 
 import images from "@/assets/index";
+import cn from "@/utils/cn";
 
 interface IRow {
   type: {
@@ -60,9 +63,7 @@ const CallList = ({
             : images.call_statuses.missedCall;
 
         return (
-          <div className="h-full w-full flex">
-            <img src={type} alt="call_type" height={13} width={13} />
-          </div>
+          <img src={type} alt="call_type" height={13} width={13} />
         );
       },
       flex: 1,
@@ -70,7 +71,7 @@ const CallList = ({
     {
       headerName: "Время",
       cellRenderer: (p: ValueGetterParams) => {
-        return <p>{renderTime(p.data.time)}</p>;
+        return renderTime(p.data.time);
       },
       flex: 1,
     },
@@ -81,15 +82,13 @@ const CallList = ({
           if (p.data.employee.person_avatar === "") {
             if (p.data.employee.person_name === "") {
               return (
-                <div className="h-full w-full flex">
-                  <img
-                    src={images.ui.blankAvatar}
-                    alt="call_type"
-                    height={32}
-                    width={32}
-                    className="h-[32px] w-[32px] rounded-full"
-                  />
-                </div>
+                <img
+                  src={images.ui.blankAvatar}
+                  alt="call_type"
+                  height={32}
+                  width={32}
+                  className="h-[32px] w-[32px] rounded-full"
+                />
               );
             } else {
               const initials =
@@ -127,28 +126,44 @@ const CallList = ({
     },
     {
       headerName: "Звонок",
+      cellClass: "call-styles",
       cellRenderer: (p: ValueGetterParams) => {
         return (
-          <div>
-            <p>{p.data.call.name}</p>
-            <p>{p.data.call.company_name}</p>
-            <p>{p.data.call.phone}</p>
-          </div>
+          <>
+            <span className="font-medium text-text-dark-blue">
+              <strong>{p.data.call.name}</strong>
+            </span>
+            <span
+              className={cn(
+                p.data.call.name === "" ? "text-text-dark-blue" : "text-text-blue-gray"
+              )}
+            >
+              {p.data.call.company_name}
+            </span>
+            <span
+              className={cn(
+                (p.data.call.name === "" && p.data.call.company_name === "") ? "text-text-dark-blue" : "text-text-blue-gray"
+              )}
+            >
+              {p.data.call.phone}
+            </span>
+          </>
         );
       },
       flex: 2,
     },
     {
       headerName: "Источник",
+      cellClass: "source-styles",
       cellRenderer: (p: ValueGetterParams) => {
-        return <p>{p.data.source}</p>;
+        return p.data.source || "-";
       },
       flex: 2,
     },
     {
       headerName: "Оценка",
       cellRenderer: () => {
-        return <p>grade</p>;
+        return "-";
       },
       flex: 1,
     },
@@ -160,18 +175,15 @@ const CallList = ({
         }
 
         return p?.node?.rowIndex === hoveredRowIndex ? (
-          <audio controls>
-            <source
-              src={records.find(record => record.partnership_id === p.data.record.partnership_id && record.record_id === p.data.record.record_id)?.audio_url || ""}
-              type="audio/mpeg"
-            />
-            Your browser does not support the audio element.
-          </audio>
+          <AudioPlayer
+            source={records.find(record => record.partnership_id === p.data.record.partnership_id && record.record_id === p.data.record.record_id)?.audio_url || ""}
+            durationTime={renderTime(p.data.duration)}
+          />
         ) : (
-          <p>{renderTime(p.data.duration)}</p>
+          <>{renderTime(p.data.duration)}</>
         );
       },
-      flex: 2,
+      flex: 3,
     },
   ];
 
@@ -185,6 +197,7 @@ const CallList = ({
     return {
       mode: "multiRow",
       headerCheckbox: false,
+      checkboxes: false
     };
   }, []);
 

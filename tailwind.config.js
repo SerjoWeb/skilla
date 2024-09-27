@@ -11,10 +11,7 @@ export default {
           blue: "#005FF8",
           "bright-blue": "#002CFB",
           "dark-blue": "#122945",
-          "blue-gray": {
-            primary: "#5E7793",
-            secondary:"#5E7793",
-          },
+          "blue-gray": "#5E7793",
         },
         ui: {
           red: {
